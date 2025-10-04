@@ -1,0 +1,19 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+*::after,*::before{
+    box-sizing: border-box;
+}
+body {
+    background-color: hsl(46, 28%, 91%);
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    text-align: center;
+    font-size: 2em;
+    margin-top: 50px;
+    font-family:  sans-serif;
+    color: hsl(267, 32%, 20%);
+}
