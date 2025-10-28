@@ -178,9 +178,9 @@ const DESCUENTO_X_CANT = (cant) => (cant >= 3 ? 0.2 : 0);
 
 // ===============================
 // DOM READY
-// ===============================
+
 document.addEventListener("DOMContentLoaded", () => {
-  // --- refs DOM ---
+
   const productosContainer = document.getElementById("productos-container");
   const filtrosWrap = document.getElementById("filtros");
 
@@ -211,9 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkoutForm = document.getElementById("checkout-form");
   const checkoutMsg = document.getElementById("checkout-msg");
 
-  // --------------------------
-  // helpers
-  // --------------------------
+
   function switchSection(target) {
     secciones.forEach((sec) => {
       sec.classList.toggle("hidden", sec.id !== `${target}-section`);
