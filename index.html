@@ -1,15 +1,220 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/main.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Good-Look · Estilo masculino</title>
+  <!-- Importa el CSS compilado desde style.scss -->
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Bienvenido a tienda Good-Look!  </h1>
 
+  <!-- HEADER / NAV -->
+  <header class="site-header">
+    <nav class="navbar container">
+      <div class="nav-top">
+        <div class="brand">Good-Look</div>
+
+        <!-- botón hamburguesa mobile -->
+        <button id="navbar-toggle" class="navbar-toggle" aria-label="Abrir menú">
+          ☰
+        </button>
+      </div>
+
+      <!-- links -->
+      <div class="nav-links" id="nav-links">
+        <a href="#" data-section="home" class="nav-link">Inicio</a>
+        <a href="#" data-section="catalogo" class="nav-link">Catálogo</a>
+        <a href="#" data-section="checkout" class="nav-link">Checkout</a>
+
+        <button id="btn-carrito" class="carrito-btn">
+          Carrito (<span id="carrito-count">0</span>)
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="main container">
+
+    <!-- ============ HOME / HERO ============ -->
+    <section id="home-section" class="vista">
+      <section class="hero-landing-wrapper">
+        <div class="hero-landing-card">
+
+          <!-- TEXTO -->
+          <div class="hero-copy">
+            <div class="hero-chip">🔥 Nueva temporada FW25</div>
+
+            <h1 class="hero-title">
+              Estilo urbano masculino,<br>
+              sin pagar de más.
+            </h1>
+
+            <p class="hero-desc">
+              Camperas, jeans, remeras oversize y más. Envíos a todo el país.
+              Descuento automático comprando 3+ prendas. IVA incluido.
+            </p>
+
+            <div class="hero-cta">
+              <a href="#" data-section="catalogo" class="btn-cta-primary">
+                Ver catálogo
+              </a>
+              <a href="#" data-section="checkout" class="btn-cta-secondary">
+                Ir al checkout
+              </a>
+            </div>
+
+            <div class="hero-badges">
+              <div class="hero-badge">
+                <span class="badge-top">20% OFF</span>
+                <span class="badge-bottom">Desde 3 prendas</span>
+              </div>
+              <div class="hero-badge">
+                <span class="badge-top">Envíos 24/48h</span>
+                <span class="badge-bottom">A todo el país</span>
+              </div>
+              <div class="hero-badge">
+                <span class="badge-top">Cambios fáciles</span>
+                <span class="badge-bottom">30 días</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCTO DESTACADO -->
+          <div class="hero-figure">
+            <div class="hero-product-card">
+              <img
+                src="img/prod-8.jpg"
+                alt="Campera rompeviento FW25"
+                class="hero-product-img"
+              >
+              <div class="hero-product-info">
+                <div class="hero-prod-name">Campera rompeviento</div>
+                <div class="hero-prod-price">$52.900 ARS</div>
+                <div class="hero-prod-note">Talles S · M · L · XL</div>
+              </div>
+            </div>
+
+            <div class="hero-floating-label">
+              Bestseller 🏆
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </section>
+
+    <!-- ============ CATÁLOGO DINÁMICO ============ -->
+    <section id="catalogo-section" class="vista hidden">
+      <div class="catalogo-head">
+        <h2 class="catalogo-title">Catálogo</h2>
+
+        <div class="filtros" id="filtros">
+          <button class="filtro-btn active" data-filtro="all">Todos</button>
+          <button class="filtro-btn" data-filtro="remera">Remeras</button>
+          <button class="filtro-btn" data-filtro="camisa">Camisas</button>
+          <button class="filtro-btn" data-filtro="pantalon">Pantalones</button>
+          <button class="filtro-btn" data-filtro="bermuda">Bermudas</button>
+          <button class="filtro-btn" data-filtro="campera">Camperas</button>
+        </div>
+      </div>
+
+      <!-- Productos generados por JS -->
+      <div id="productos-container" class="productos-grid"></div>
+    </section>
+
+    <!-- ============ CHECKOUT ============ -->
+    <section id="checkout-section" class="vista hidden">
+      <div class="checkout-card">
+        <h2>Checkout</h2>
+        <p>Completá tus datos y presioná "Finalizar pedido".</p>
+
+        <form id="checkout-form">
+          <div class="form-group">
+            <label for="nombre">Nombre y Apellido</label>
+            <input type="text" id="nombre" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="direccion">Dirección de envío</label>
+            <input type="text" id="direccion" required>
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" required>
+          </div>
+
+          <button class="btn-finalizar" type="submit">Finalizar pedido</button>
+        </form>
+
+        <div id="checkout-msg" class="checkout-msg"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ PANEL CARRITO LATERAL (OFFCANVAS) ============ -->
+  <aside id="carrito-panel" class="carrito-panel" aria-label="Carrito de compras">
+    <div class="carrito-header">
+      <h2>Tu carrito (<span id="carrito-count-panel">0</span>)</h2>
+      <button id="cerrar-carrito" class="cerrar-carrito-btn" aria-label="Cerrar carrito">✕</button>
+    </div>
+
+    <div class="carrito-body">
+      <table class="carrito-tabla" id="tabla-carrito">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cant.</th>
+            <th>Subtotal</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Items dinámicos -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="carrito-footer">
+      <div class="resumen-row">
+        <span>Subtotal</span>
+        <span id="resumen-subtotal">$0</span>
+      </div>
+
+      <div class="resumen-row">
+        <span>Descuento</span>
+        <span id="resumen-descuento">0%</span>
+      </div>
+
+      <div class="resumen-row">
+        <span>IVA</span>
+        <span id="resumen-iva">21%</span>
+      </div>
+
+      <div class="resumen-row resumen-total">
+        <span>Total</span>
+        <span id="resumen-total">$0</span>
+      </div>
+
+      <div class="carrito-actions">
+        <button id="vaciar-carrito" class="btn-vaciar">Vaciar</button>
+        <button id="go-checkout" data-section="checkout" class="btn-ir-checkout">Ir a pagar</button>
+      </div>
+    </div>
+  </aside>
+
+  <footer class="site-footer container">
+    © 2025 Good-Look. Todos los derechos reservados.
+  </footer>
+
+  <script src="main.js"></script>
 </body>
 </html>
