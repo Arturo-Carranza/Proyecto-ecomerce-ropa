@@ -1,7 +1,6 @@
 @charset "UTF-8";
 /* =================================
-   VARIABLES (CSS runtime + SCSS)
-   ================================= */
+   VARIABLES ========================= */
 :root {
   --bg:#0e1117;
   --surface:#1a1f29;
@@ -12,17 +11,18 @@
   --success:#4ade80;
   --radius-lg:1rem;
   --radius-md:.6rem;
+  --bp-md:768px;
+  --bp-lg:1200px;
   font-size: 16px;
 }
 
-/* Breakpoints SCSS */
-/* Shorthand SCSS vars (lee de las CSS vars para poder themear a futuro) */
+/* Breakpoints*/
 /* =================================
-   MIXINS
-   ================================= */
+MIXINS
+================================= */
 /* =================================
-   RESET BÁSICO
-   ================================= */
+RESET BÁSICO
+================================= */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -59,8 +59,8 @@ body {
 }
 
 /* =================================
-   HEADER / NAV
-   ================================= */
+HEADER / NAV
+================================= */
 .site-header {
   position: sticky;
   top: 0;
@@ -110,23 +110,33 @@ body {
     display: none;
   }
 }
-.navbar .nav-links {
-  /* Mobile: menú plegable */
-  display: none;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-  width: 100%;
-  background: var(--surface);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: var(--radius-md);
-  padding: 1rem;
+.navbar {
+  /* === Desktop override para ocultar hamburguesa y mostrar menú === */
 }
-.navbar .nav-links.open {
+@media (min-width: 768px) {
+  .navbar .navbar-toggle {
+    display: none !important;
+  }
+  .navbar .nav-links {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    gap: 1rem;
+    max-height: none;
+    overflow: visible;
+  }
+}
+.navbar.open {
   display: flex;
 }
 @media (min-width: 768px) {
-  .navbar .nav-links {
+  .navbar {
     /* Desktop: nav inline */
     display: flex;
     flex-direction: row;
@@ -140,8 +150,8 @@ body {
     gap: 1rem;
   }
 }
-.navbar .nav-links .nav-link,
-.navbar .nav-links .carrito-btn {
+.navbar .nav-link,
+.navbar .carrito-btn {
   color: var(--muted);
   font-size: 0.9rem;
   text-decoration: none;
@@ -152,15 +162,15 @@ body {
   border-radius: var(--radius-md);
   transition: all 0.2s;
 }
-.navbar .nav-links .nav-link:hover,
-.navbar .nav-links .carrito-btn:hover {
+.navbar .nav-link:hover,
+.navbar .carrito-btn:hover {
   color: var(--text);
   background: rgba(255, 255, 255, 0.07);
 }
 
 /* =================================
-   HERO / HOME
-   ================================= */
+HERO / HOME
+================================= */
 .hero-landing-wrapper {
   padding: 2rem 0 3rem;
 }
@@ -759,13 +769,193 @@ body {
 }
 
 /* =================================
-   FOOTER
-   ================================= */
+FOOTER
+================================= */
 .site-footer {
   color: var(--muted);
   font-size: 0.7rem;
   text-align: center;
   padding: 2rem 0 4rem;
+}
+
+/* === NAVBAR RESPONSIVE (fix auto-insert) === */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nav-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.navbar-toggle {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  line-height: 1;
+  font-size: 1rem;
+  color: var(--text, #fff);
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .navbar-toggle {
+    display: none;
+  }
+}
+
+.nav-links {
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  background: var(--surface, #1a1f29);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  max-height: 70vh; /* evita que se corte si hay muchos links */
+  overflow: auto; /* scroll interno para ver todas las opciones */
+}
+.nav-links.open {
+  display: flex;
+}
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap; /* si hay muchos, bajan a otra línea */
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    max-height: none;
+    overflow: visible;
+    gap: 1rem;
+  }
+}
+.nav-links .nav-link, .nav-links .carrito-btn {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--muted, #9ca3af);
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  width: 100%;
+  text-align: left;
+}
+.nav-links .nav-link:hover, .nav-links .carrito-btn:hover {
+  color: var(--text, #fff);
+  background: rgba(255, 255, 255, 0.07);
+}
+@media (min-width: 768px) {
+  .nav-links .nav-link, .nav-links .carrito-btn {
+    width: auto;
+    text-align: center;
+  }
+}
+
+/* === Cart badge pill + bump animation === */
+.cart-pill {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent, #4f8bff);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1;
+  vertical-align: middle;
+  margin-left: 0.35rem;
+}
+
+@keyframes bump-kf {
+  0% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.15);
+  }
+  30% {
+    transform: scale(0.98);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.bump {
+  animation: bump-kf 0.35s ease;
+  transform-origin: center;
+}
+
+/* === Toast notifications === */
+.toast-container {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  display: grid;
+  gap: 0.5rem;
+  z-index: 3000;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  background: #0e1117;
+  color: var(--text, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid var(--accent, #4f8bff);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
+  line-height: 1.2;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast.hide {
+  transform: translateY(8px);
+  opacity: 0;
+}
+
+.toast--success {
+  border-left-color: #22c55e;
+} /* verde */
+.toast--info {
+  border-left-color: var(--accent, #4f8bff);
+}
+
+.toast--warning {
+  border-left-color: #f59e0b;
+} /* amarillo */
+.toast--error {
+  border-left-color: #ef4444;
+} /* rojo */
+.toast__msg {
+  display: inline-block;
 }
 
 /*# sourceMappingURL=style.css.map */

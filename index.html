@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Good-Look · Estilo masculino</title>
-  <!-- Importa el CSS compilado desde style.scss -->
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -16,7 +15,7 @@
         <div class="brand">Good-Look</div>
 
         <!-- botón hamburguesa mobile -->
-        <button id="navbar-toggle" class="navbar-toggle" aria-label="Abrir menú">
+        <button id="navbar-toggle" aria-controls="nav-links" class="navbar-toggle" aria-expanded="false" aria-label="Abrir menú">
           ☰
         </button>
       </div>
@@ -28,7 +27,7 @@
         <a href="#" data-section="checkout" class="nav-link">Checkout</a>
 
         <button id="btn-carrito" class="carrito-btn">
-          Carrito (<span id="carrito-count">0</span>)
+          Carrito <span id="carrito-count" class="cart-pill">0</span>
         </button>
       </div>
     </nav>
@@ -39,7 +38,7 @@
     <!-- ============ HOME / HERO ============ -->
     <section id="home-section" class="vista">
       <section class="hero-landing-wrapper">
-        <div class="hero-landing-card">
+        <div class="hero-landing-card reveal-on-scroll">
 
           <!-- TEXTO -->
           <div class="hero-copy">
@@ -75,7 +74,7 @@
               </div>
               <div class="hero-badge">
                 <span class="badge-top">Cambios fáciles</span>
-                <span class="badge-bottom">30 días</span>
+                <span class="badge-bottom">Dentro de las 72hs </span>
               </div>
             </div>
           </div>
@@ -102,6 +101,8 @@
 
         </div>
       </section>
+      
+
     </section>
 
     <!-- ============ CATÁLOGO DINÁMICO ============ -->
@@ -162,7 +163,7 @@
   <!-- ============ PANEL CARRITO LATERAL (OFFCANVAS) ============ -->
   <aside id="carrito-panel" class="carrito-panel" aria-label="Carrito de compras">
     <div class="carrito-header">
-      <h2>Tu carrito (<span id="carrito-count-panel">0</span>)</h2>
+      <h2>Tu carrito <span id="carrito-count-panel" class="cart-pill">0</span></h2>
       <button id="cerrar-carrito" class="cerrar-carrito-btn" aria-label="Cerrar carrito">✕</button>
     </div>
 
@@ -215,6 +216,8 @@
     © 2025 Good-Look. Todos los derechos reservados.
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="main.js"></script>
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 </body>
 </html>

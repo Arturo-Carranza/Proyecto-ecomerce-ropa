@@ -200,6 +200,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const vaciarBtn = document.getElementById("vaciar-carrito");
   const goCheckoutBtn = document.getElementById("go-checkout");
+  goCheckoutBtn.addEventListener("click", () => {
+    if (carrito.cantidadTotal === 0) {
+      createToast("Tu carrito está vacío", "error");
+    } else {
+      createToast("Ir a pagar → completá tus datos", "info");
+    }
+  });
+
 
   const secciones = document.querySelectorAll(".vista");
 
@@ -210,6 +218,42 @@ document.addEventListener("DOMContentLoaded", () => {
   // checkout
   const checkoutForm = document.getElementById("checkout-form");
   const checkoutMsg = document.getElementById("checkout-msg");
+  // ---------- Notificaciones (toasts) y animación del badge ----------
+  function createToast(msg, type = "info") {
+    const cont = document.getElementById("toast-container");
+    if (!cont) return;
+    const t = document.createElement("div");
+    t.className = "toast toast--" + type + " show";
+    t.role = "status";
+    t.innerHTML = `<span class="toast__msg">${msg}</span>`;
+    cont.appendChild(t);
+    // autocierre
+    setTimeout(() => {
+      t.classList.remove("show");
+      t.classList.add("hide");
+      setTimeout(() => t.remove(), 250);
+    }, 2500);
+    // cierre manual
+    t.addEventListener("click", () => {
+      t.classList.remove("show");
+      t.classList.add("hide");
+      setTimeout(() => t.remove(), 150);
+    });
+  }
+
+  function bumpCartBadge() {
+    const b1 = document.getElementById("carrito-count");
+    const b2 = document.getElementById("carrito-count-panel");
+    [b1, b2].forEach((b) => {
+      if (!b) return;
+      b.classList.remove("bump"); // reset if active
+      // force reflow to restart animation
+      void b.offsetWidth;
+      b.classList.add("bump");
+      setTimeout(() => b.classList.remove("bump"), 400);
+    });
+  }
+
 
 
   function switchSection(target) {
@@ -362,12 +406,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const cantidad = parseInt(cantInput.value, 10);
 
     if (!cantidad || cantidad <= 0) {
-      alert("Cantidad inválida.");
+      Swal.fire({
+        icon: "error",
+        title: "Cantidad inválida",
+        text: "Ingresá una cantidad mayor a cero.",
+      });
       return;
     }
 
     carrito.agregar(new ItemCarrito(producto, talle, cantidad));
     updateCarritoUI();
+    bumpCartBadge();
+
+    Swal.fire({
+      icon: "success",
+      title: "Agregado al carrito",
+      text: `${producto.nombre} (${talle}) x${cantidad}`,
+      timer: 1800,
+      showConfirmButton: false,
+    });
   });
 
   // --------------------------
@@ -393,8 +450,34 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   vaciarBtn.addEventListener("click", () => {
-    carrito.items = [];
-    updateCarritoUI();
+    if (carrito.items.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "Carrito vacío",
+        text: "No tenés productos para eliminar.",
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: "¿Vaciar carrito?",
+      text: "Se van a eliminar todos los productos del carrito.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, vaciar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        carrito.items = [];
+        updateCarritoUI();
+        Swal.fire({
+          icon: "success",
+          title: "Carrito vaciado",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    });
   });
 
   // --------------------------
@@ -410,11 +493,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --------------------------
   // Navbar hamburguesa (mobile)
-  // --------------------------
-  navToggleBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("open");
-  });
 
+// Navbar hamburguesa (mobile) — accesible
+navToggleBtn.addEventListener("click", () => {
+  const isOpen = navLinks.classList.toggle("open");
+  navToggleBtn.setAttribute("aria-expanded", String(isOpen));
+});
+
+// Cerrar con ESC cuando está abierto (mobile)
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && navLinks.classList.contains("open")) {
+    navLinks.classList.remove("open");
+    navToggleBtn.setAttribute("aria-expanded", "false");
+  }
+});
+
+// Si vuelvo a desktop, asegurar estado coherente
+const mq = window.matchMedia("(min-width: 768px)");
+mq.addEventListener("change", (e) => {
+  if (e.matches){ // entró a desktop
+    navLinks.classList.remove("open");
+    navToggleBtn.setAttribute("aria-expanded", "false");
+  }
+});
+  // --------------------------
   // --------------------------
   // Navegación SPA (Inicio / Catálogo / Checkout)
   // También cierra menú móvil y carrito cuando corresponde
@@ -446,19 +548,57 @@ document.addEventListener("DOMContentLoaded", () => {
     if (carrito.items.length === 0) {
       checkoutMsg.textContent = "Tu carrito está vacío.";
       checkoutMsg.style.color = "var(--danger)";
+
+      Swal.fire({
+        icon: "error",
+        title: "Carrito vacío",
+        text: "Agregá productos antes de confirmar tu compra.",
+      });
+
       return;
     }
 
     const nombre = document.getElementById("nombre").value.trim();
 
-    checkoutMsg.textContent =
+    const mensaje =
       "Gracias " +
-      nombre +
+      (nombre || "") +
       "! Tu pedido fue registrado. Te vamos a contactar para coordinar pago y envío.";
+
+    checkoutMsg.textContent = mensaje;
     checkoutMsg.style.color = "var(--success)";
+
+    Swal.fire({
+      icon: "success",
+      title: "Compra confirmada",
+      text: mensaje,
+    });
 
     carrito.items = [];
     updateCarritoUI();
     checkoutForm.reset();
   });
+
+  // --------------------------
+  // Animaciones on scroll (IntersectionObserver)
+  // --------------------------
+  const revealEls = document.querySelectorAll(".reveal-on-scroll");
+  if (revealEls.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.15,
+      }
+    );
+
+    revealEls.forEach((el) => observer.observe(el));
+  }
+
 });
